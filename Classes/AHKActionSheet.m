@@ -287,8 +287,14 @@ static const CGFloat kCancelButtonShadowHeightRatio = 0.333f;
     };
 
     void(^delayedAnimations)(void) = ^(void) {
+        CGFloat bottomPadding = 0;
+        if (@available(iOS 11.0, *)) {
+            UIWindow *window = UIApplication.sharedApplication.keyWindow;
+            bottomPadding = window.safeAreaInsets.bottom;
+        }
+        
         self.cancelButton.frame = CGRectMake(0,
-                                             CGRectGetMaxY(self.bounds) - self.cancelButtonHeight,
+                                             CGRectGetMaxY(self.bounds) - self.cancelButtonHeight - bottomPadding,
                                              CGRectGetWidth(self.bounds),
                                              self.cancelButtonHeight);
             
@@ -435,8 +441,15 @@ static const CGFloat kCancelButtonShadowHeightRatio = 0.333f;
                                                                     attributes:self.cancelButtonTextAttributes];
     [cancelButton setAttributedTitle:attrTitle forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(cancelButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    
+    CGFloat bottomPadding = 0;
+    if (@available(iOS 11.0, *)) {
+        UIWindow *window = UIApplication.sharedApplication.keyWindow;
+        bottomPadding = window.safeAreaInsets.bottom;
+    }
+    
     cancelButton.frame = CGRectMake(0,
-                                    CGRectGetMaxY(self.bounds) - self.cancelButtonHeight,
+                                    CGRectGetMaxY(self.bounds) - self.cancelButtonHeight - bottomPadding,
                                     CGRectGetWidth(self.bounds),
                                     self.cancelButtonHeight);
     // move the button below the screen (ready to be animated -show)
@@ -464,10 +477,17 @@ static const CGFloat kCancelButtonShadowHeightRatio = 0.333f;
 {
     CGRect statusBarViewRect = [self convertRect:[UIApplication sharedApplication].statusBarFrame fromView:nil];
     CGFloat statusBarHeight = CGRectGetHeight(statusBarViewRect);
+    
+    CGFloat bottomPadding = 0;
+    if (@available(iOS 11.0, *)) {
+        UIWindow *window = UIApplication.sharedApplication.keyWindow;
+        bottomPadding = window.safeAreaInsets.bottom;
+    }
+    
     CGRect frame = CGRectMake(0,
                               statusBarHeight,
                               CGRectGetWidth(self.bounds),
-                              CGRectGetHeight(self.bounds) - statusBarHeight - self.cancelButtonHeight);
+                              CGRectGetHeight(self.bounds) - statusBarHeight - self.cancelButtonHeight - bottomPadding);
 
     UITableView *tableView = [[UITableView alloc] initWithFrame:frame];
     tableView.backgroundColor = [UIColor clearColor];
